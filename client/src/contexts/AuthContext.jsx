@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
     const handleBeforeUnload = async () => {
       if (user && token) {
         try {
-          await axios.post('/auth/logout');
+          await axios.post('api/auth/logout');
         } catch (error) {
           console.error('Logout on tab close failed:', error);
         }
@@ -44,7 +44,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUser = async () => {
     try {
-      const response = await axios.get('/auth/me');
+      const response = await axios.get('api/auth/me');
       setUser(response.data.user);
     } catch (error) {
       console.error('Failed to fetch user:', error);
@@ -56,7 +56,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (googleToken) => {
     try {
-      const response = await axios.post('/auth/google', {
+      const response = await axios.post('api/auth/google', {
         token: googleToken
       });
       const { token: jwtToken, user: userData } = response.data;
@@ -73,7 +73,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await axios.post('/auth/logout');
+      await axios.post('api/auth/logout');
     } catch (error) {
       console.error('Server logout failed:', error);
     }
