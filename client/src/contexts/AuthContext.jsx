@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios'; // Import configured axios
-axios.defaults.baseURL = 'https://sscalender.onrender.com/api';
+axios.defaults.baseURL = 'https://sscalender.onrender.com/';
 const AuthContext = createContext();
 
 export const useAuth = () => {
