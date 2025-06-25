@@ -1,0 +1,12 @@
+node_modules/
+.env
+api_endpoints.txt
+create_superuser.txt
+data_flow.txt
+deploy.txt
+file_explanations.txt
+google.txt
+netlify_deploy.txt
+run_commands.txt
+tools_versions.txt
+

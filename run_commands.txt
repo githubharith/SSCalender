@@ -1,0 +1,396 @@
+# SSCalendar - Setup and Run Commands
+
+## Prerequisites Installation
+```bash
+# Install Node.js (version 20.18.0 recommended)
+# Download from: https://nodejs.org/
+
+# Verify installation
+node --version
+npm --version
+
+# Install Git
+# Download from: https://git-scm.com/
+git --version
+```
+
+## Project Setup
+
+### 1. Clone/Download Project
+```bash
+# If using Git
+git clone <repository-url>
+cd sscalendar
+
+# Or extract downloaded ZIP file
+cd sscalendar
+```
+
+### 2. Install Dependencies
+```bash
+# Install root dependencies (concurrently)
+npm install
+
+# Install client dependencies
+cd client
+npm install
+cd ..
+
+# Install server dependencies
+cd server
+npm install
+cd ..
+```
+
+### 3. Environment Configuration
+
+#### Client Environment (.env in /client directory)
+```bash
+cd client
+cp .env.example .env
+
+# Edit .env file with:
+VITE_GOOGLE_CLIENT_ID=70995210409-osvu98nv8igogfk4n8t2rro16tcdnd0i.apps.googleusercontent.com
+VITE_API_BASE_URL=http://localhost:3000
+```
+
+#### Server Environment (.env in /server directory)
+```bash
+cd server
+cp .env.example .env
+
+# Edit .env file with:
+MONGODB_URI=mongodb+srv://harithcb22:H4rithP3rum4l@cluster0.ga2tc.mongodb.net/GuardShare?retryWrites=true&w=majority&appName=Cluster0
+GOOGLE_CLIENT_ID=70995210409-osvu98nv8igogfk4n8t2rro16tcdnd0i.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+JWT_SECRET=your_super_secret_jwt_key_here_make_it_long_and_random
+CLIENT_URL=http://localhost:5173
+PORT=3000
+NODE_ENV=development
+```
+
+## Development Commands
+
+### Run Full Application (Recommended)
+```bash
+# From root directory - runs both client and server
+npm run dev
+
+# This starts:
+# - Client on http://localhost:5173 with enhanced features
+# - Server on http://localhost:3000 with multi-day event support
+```
+
+### Run Individual Services
+
+#### Client Only
+```bash
+cd client
+npm run dev
+# Runs on http://localhost:5173
+# Features: Real-time clock, multi-view calendar, enhanced notifications
+```
+
+#### Server Only
+```bash
+cd server
+npm run dev
+# Runs on http://localhost:3000
+# Features: Enhanced event API, multi-day support, improved validation
+```
+
+## Build Commands
+
+### Build Client for Production
+```bash
+cd client
+npm run build
+# Creates /client/dist folder with optimized files
+# Includes all new features: day/year views, real-time clock, notifications
+```
+
+### Preview Production Build
+```bash
+cd client
+npm run preview
+# Serves production build locally for testing
+```
+
+## Testing Commands
+
+### Lint Client Code
+```bash
+cd client
+npm run lint
+# Checks for code quality issues in enhanced components
+```
+
+### Test Enhanced API Endpoints
+```bash
+# Use curl or Postman to test new endpoints
+
+# Health check
+curl http://localhost:3000/api/health
+
+# Test multi-day event creation (replace TOKEN with actual JWT)
+curl -X POST http://localhost:3000/api/events \
+  -H "Authorization: Bearer TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "title": "Multi-day Conference",
+    "startDate": "2024-01-15",
+    "endDate": "2024-01-17",
+    "startTime": "09:00",
+    "endTime": "17:00",
+    "description": "Annual tech conference",
+    "group": "Work"
+  }'
+
+# Test enhanced search with filters
+curl -H "Authorization: Bearer TOKEN" \
+  "http://localhost:3000/api/search?query=meeting&startDate=2024-01-01&endDate=2024-01-31"
+```
+
+## Database Commands
+
+### MongoDB Atlas Setup
+1. Ensure MongoDB Atlas cluster is running
+2. Whitelist your IP address in Atlas
+3. Verify connection string in server/.env
+4. Database and collections will be created automatically
+5. New indexes will be created for enhanced queries
+
+### Check Enhanced Database Connection
+```bash
+cd server
+node -e "
+const mongoose = require('mongoose');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb+srv://harithcb22:H4rithP3rum4l@cluster0.ga2tc.mongodb.net/GuardShare?retryWrites=true&w=majority&appName=Cluster0')
+.then(() => {
+  console.log('MongoDB connected successfully');
+  console.log('Enhanced event schema with startDate/endDate support');
+})
+.catch(err => console.error('MongoDB connection error:', err));
+"
+```
+
+## Feature Testing Commands
+
+### Test Real-Time Clock
+```bash
+# Open browser to http://localhost:5173
+# Verify clock updates every second in header
+# Check 24-hour format (HH:MM:SS)
+```
+
+### Test Multi-Day Events
+```bash
+# Create event spanning multiple days
+# Verify visual spanning across calendar cells
+# Check event appears in all affected days
+```
+
+### Test Calendar Views
+```bash
+# Test Day View: Click "Day" button, verify hourly timeline
+# Test Month View: Default view with enhanced grid
+# Test Year View: Click "Year" button, verify 12-month overview
+```
+
+### Test Enhanced Notifications
+```bash
+# Create event for today
+# Verify notification popup appears
+# Test dismiss functionality (click X)
+# Verify notification doesn't reappear after dismissal
+```
+
+## Deployment Commands
+
+### Deploy to Netlify (Frontend)
+```bash
+# Build the enhanced client
+cd client
+npm run build
+
+# Deploy dist folder to Netlify
+# Option 1: Drag and drop /client/dist to netlify.com
+# Option 2: Use Netlify CLI
+npm install -g netlify-cli
+netlify deploy --prod --dir=dist
+```
+
+### Deploy Backend (Railway/Heroku)
+```bash
+# For Railway
+npm install -g @railway/cli
+railway login
+railway init
+railway up
+
+# For Heroku
+npm install -g heroku
+heroku login
+heroku create your-app-name
+git push heroku main
+```
+
+## Troubleshooting Commands
+
+### Clear Node Modules and Reinstall
+```bash
+# Client
+cd client
+rm -rf node_modules package-lock.json
+npm install
+
+# Server
+cd server
+rm -rf node_modules package-lock.json
+npm install
+
+# Root
+rm -rf node_modules package-lock.json
+npm install
+```
+
+### Check Port Usage
+```bash
+# Check if ports are in use
+lsof -i :3000  # Server port
+lsof -i :5173  # Client port
+
+# Kill processes if needed
+kill -9 <PID>
+```
+
+### Debug Enhanced Features
+```bash
+# Check browser console for errors
+# Verify network requests in DevTools
+# Check MongoDB logs for query issues
+# Verify Google OAuth configuration
+```
+
+## Production Environment Variables
+
+### Client (.env.production)
+```bash
+VITE_GOOGLE_CLIENT_ID=70995210409-osvu98nv8igogfk4n8t2rro16tcdnd0i.apps.googleusercontent.com
+VITE_API_BASE_URL=https://your-backend-domain.com
+```
+
+### Server (Production Environment)
+```bash
+MONGODB_URI=mongodb+srv://harithcb22:H4rithP3rum4l@cluster0.ga2tc.mongodb.net/GuardShare?retryWrites=true&w=majority&appName=Cluster0
+GOOGLE_CLIENT_ID=70995210409-osvu98nv8igogfk4n8t2rro16tcdnd0i.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=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
+JWT_SECRET=production_jwt_secret_very_long_and_secure
+CLIENT_URL=https://your-frontend-domain.netlify.app
+PORT=3000
+NODE_ENV=production
+```
+
+## Enhanced Quick Start Summary
+```bash
+# 1. Install dependencies
+npm install && cd client && npm install && cd ../server && npm install && cd ..
+
+# 2. Setup environment files (copy examples and edit)
+cp client/.env.example client/.env
+cp server/.env.example server/.env
+
+# 3. Run enhanced application
+npm run dev
+
+# 4. Open browser to http://localhost:5173
+# 5. Test new features:
+#    - Real-time clock in header
+#    - Plus icons on calendar cells
+#    - Day/Month/Year view toggle
+#    - Event list popups (click date numbers)
+#    - Multi-day event creation
+#    - Enhanced notifications
+```
+
+## New Feature Verification
+
+### Real-Time Features
+- [ ] Clock updates every second
+- [ ] Notifications appear for today's events
+- [ ] Current time indicator in day view
+- [ ] Live event status updates
+
+### Enhanced Calendar
+- [ ] Plus icons appear on hover
+- [ ] Date clicks show event popups
+- [ ] Multi-day events span correctly
+- [ ] Event sorting by time priority
+- [ ] Thicker, darker grid borders
+
+### Multi-View System
+- [ ] Day view shows hourly timeline
+- [ ] Year view displays 12 months
+- [ ] Smooth transitions between views
+- [ ] Proper event positioning in each view
+
+### Form Validation
+- [ ] All fields marked as required
+- [ ] Validation errors display clearly
+- [ ] Date/time logic validation
+- [ ] Successful submission feedback
+
+## Common Issues and Solutions
+
+### Enhanced Feature Issues
+```bash
+# Real-time clock not updating
+# Check component mounting and interval cleanup
+
+# Multi-day events not displaying
+# Verify startDate/endDate in database
+# Check event query logic
+
+# Notifications not appearing
+# Verify today's events exist
+# Check dismissal state management
+
+# Plus icons not showing
+# Verify hover states and CSS
+# Check event handlers
+```
+
+### Database Migration Issues
+```bash
+# Existing events missing startDate/endDate
+# Run migration script to populate fields
+# Check pre-save middleware in Event model
+```
+
+### Performance Issues
+```bash
+# Slow calendar rendering
+# Check event query optimization
+# Verify database indexes
+# Monitor component re-renders
+```
+
+## Development Best Practices
+
+### Code Quality
+- Use ESLint for code consistency
+- Follow React hooks best practices
+- Implement proper error boundaries
+- Write descriptive commit messages
+
+### Testing Strategy
+- Test all new features manually
+- Verify responsive design
+- Check accessibility compliance
+- Test with different data sets
+
+### Performance Monitoring
+- Monitor bundle size growth
+- Check database query performance
+- Verify memory usage patterns
+- Test with large event datasets
