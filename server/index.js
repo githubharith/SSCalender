@@ -9,6 +9,7 @@ import eventRoutes from './routes/events.js'
 import userRoutes from './routes/users.js'
 import logRoutes from './routes/logs.js'
 import searchRoutes from './routes/search.js'
+import job from "./lib/cron.js"; 
 
 dotenv.config()
 
@@ -16,6 +17,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 // Security middleware
+job.start();
 app.use(helmet())
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
