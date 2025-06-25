@@ -18,7 +18,9 @@ const PORT = process.env.PORT || 3000
 
 // Security middleware
 job.start();
-app.use(helmet())
+app.use(helmet({
+  crossOriginOpenerPolicy: { policy: 'unsafe-none' } // For testing
+}))
 app.use(cors({
   origin: process.env.CLIENT_URL || 'http://localhost:5173',
   credentials: true
