@@ -1,5 +1,11 @@
 # SSCalendar - Smart Scheduling Calendar Web Application
 
+## 🚀 Deployment
+
+The application is deployed and accessible at:
+**https://euphonious-torte-148096.netlify.app**
+
+
 ## Overview
 SSCalendar is a modern calendar and event management platform inspired by Google Calendar's functionality and Samsung Calendar's elegant design. Built with the MERN stack (MongoDB Atlas, Express.js, React + Vite, Node.js), it offers seamless event scheduling, repeatable event logic, real-time search, notifications, and superuser controls.
 
