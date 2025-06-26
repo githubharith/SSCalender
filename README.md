@@ -3,7 +3,7 @@
 ## 🚀 Deployment
 
 The application is deployed and accessible at:
-**https://euphonious-torte-148096.netlify.app**
+**https://sscalender-frontend.onrender.com/login**
 
 
 ## Overview
